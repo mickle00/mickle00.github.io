@@ -22,7 +22,7 @@
     <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script src="team_mapping.js" type="text/javascript" charset="utf-8"></script>
     <script>
-    $.getJSON("http://worldcup.kimonolabs.com/api/teams?apikey=9c834b9f5a90c0e26ed25f92813d2c44", function(data) {
+    $.getJSON("http://worldcup.kimonolabs.com/api/teams?apikey=9c834b9f5a90c0e26ed25f92813d2c44&sort=groupPoints,-1", function(data) {
       calculateScore(data);
     });
 
