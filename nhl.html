@@ -25,6 +25,9 @@
     var team_standings;
     var parseData = function(d, t, j){
         team_standings = d.query.results.standings['info-teams']['team-standing'];
+        team_standings.sort(function(a,b){
+          return b.points - a.points;
+        });
         calculateScore(team_standings);
     }
 
