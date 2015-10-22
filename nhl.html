@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>As Long as Kevin Doesn't Win I'm Happy</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script src="nhl_team_mapping.js" type="text/javascript" charset="utf-8"></script>
+    <script>
+    var team_standings;
+    var parseData = function(d, t, j){
+        team_standings = d.query.results.standings['info-teams']['team-standing'];
+        calculateScore(team_standings);
+    }
+
+    $.getJSON("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20xml%20where%20url%20%3D%20'http%3A%2F%2Fwww.tsn.ca%2Fdatafiles%2FXML%2FNHL%2Fstandings.xml'&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys", null, parseData)
+
+    function calculateScore(data){
+      var people_mappings = {'Kevin' : {'score' : 0, 'teams' : []}
+                            , 'Andy' : {'score' : 0, 'teams' : []}
+                            , 'Mike' : {'score' : 0, 'teams' : []}
+                            , 'Matt' : {'score' : 0, 'teams' : []}
+                            , 'Alex' : {'score' : 0, 'teams' : []}
+                            , 'Duncan' : {'score' : 0, 'teams' : []}
+      };
+      $(data).each(function(){
+        var owner = TEAM_OWNERS[this.name];
+        people_mappings[owner]['score'] += parseInt(this.points);
+        people_mappings[owner]['teams'].push(this);
+      });
+      console.log(people_mappings);
+      printTable(people_mappings);
+    }
+
+    function printTable(people_mappings){  
+      $.each(people_mappings, function(key, value){
+        console.log(key);
+        $('#results_table thead th#' + key).append(key + ' (' + people_mappings[key]['score'] + ')');
+      });
+        //loop thru 8 teams
+        for ( var i = 0; i < 8; i++ ) {
+            $('#results_table tbody').append(
+            '<tr>'
+             + getColumnData(people_mappings, 'Kevin', i)
+             + getColumnData(people_mappings, 'Andy', i)
+             + getColumnData(people_mappings, 'Mike', i)
+             + getColumnData(people_mappings, 'Matt', i)
+             + getColumnData(people_mappings, 'Alex', i)
+             + getColumnData(people_mappings, 'Duncan', i)
+           +'</tr>');
+        };
+    }
+    
+    function getColumnData(people_mappings, person, teamNumber){
+      return '<td>' 
+             //+ '<img src = "' + people_mappings[person]['teams'][teamNumber]['logo'] + '" height = "50px"/>'
+             + people_mappings[person]['teams'][teamNumber]['name'] 
+             + ' (' + people_mappings[person]['teams'][teamNumber]['points'] + ')'
+             + '<span style="float:right">' + people_mappings[person]['teams'][teamNumber]['wins'] +'-' + people_mappings[person]['teams'][teamNumber]['losses'] + '-' + people_mappings[person]['teams'][teamNumber]['overtime'] 
+           //  + ' (' + people_mappings[person]['teams'][teamNumber]['goalsDiff'] + ' Goals)'
+             +'</span>'
+             +'</td>';
+    }
+
+    </script>
+  </head>
+  <body>
+    <div id="results">
+      <table id="results_table" class="table table-striped table-bordered table-hover">
+        <thead>
+          <th id="Kevin" class="bg-primary"></th>
+          <th id="Andy"  class="bg-primary"></th>
+          <th id="Mike"  class="bg-primary"></th>
+          <th id="Matt"  class="bg-primary"></th>
+          <th id="Alex"  class="bg-primary"></th>
+          <th id="Duncan"  class="bg-primary"></th>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>
