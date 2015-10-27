@@ -23,6 +23,7 @@
     <script src="nhl_team_mapping.js" type="text/javascript" charset="utf-8"></script>
     <script>
     var team_standings;
+    var team_order;
     var parseData = function(d, t, j){
         team_standings = d.query.results.standings['info-teams']['team-standing'];
         team_standings.sort(function(a,b){
@@ -46,26 +47,24 @@
         people_mappings[owner]['score'] += parseInt(this.points);
         people_mappings[owner]['teams'].push(this);
       });
+      team_order = Object.keys(people_mappings).sort(function(a,b){return people_mappings[b]['score']-people_mappings[a]['score']})
       console.log(people_mappings);
       printTable(people_mappings);
     }
 
     function printTable(people_mappings){  
-      $.each(people_mappings, function(key, value){
+      $.each(team_order, function(index, key){
         console.log(key);
-        $('#results_table thead th#' + key).append(key + ' (' + people_mappings[key]['score'] + ')');
+        $('#results_table thead th#' + index).append(team_order[index] + ' (' + people_mappings[team_order[index]]['score'] + ')');
       });
         //loop thru 8 teams
         for ( var i = 0; i < 5; i++ ) {
-            $('#results_table tbody').append(
-            '<tr>'
-             + getColumnData(people_mappings, 'Kevin', i)
-             + getColumnData(people_mappings, 'Andy', i)
-             + getColumnData(people_mappings, 'Mike', i)
-             + getColumnData(people_mappings, 'Matt', i)
-             + getColumnData(people_mappings, 'Alex', i)
-             + getColumnData(people_mappings, 'Duncan', i)
-           +'</tr>');
+            var html = '<tr id="row-' + i + '">';
+            $('#results_table tbody').append(html);
+            $.each(team_order, function(index, key){
+               $('#row-' + i).append(getColumnData(people_mappings, team_order[index], i));
+             });
+           $('#results_table tbody').append('</tr>');
         };
     }
     
@@ -85,13 +84,13 @@
   <body>
     <div id="results">
       <table id="results_table" class="table table-striped table-bordered table-hover">
-        <thead>
-          <th id="Kevin" class="bg-primary"></th>
-          <th id="Andy"  class="bg-primary"></th>
-          <th id="Mike"  class="bg-primary"></th>
-          <th id="Matt"  class="bg-primary"></th>
-          <th id="Alex"  class="bg-primary"></th>
-          <th id="Duncan"  class="bg-primary"></th>
+        <thead id="results_table_header">
+          <th id="0" class="bg-primary"></th>
+          <th id="1"  class="bg-primary"></th>
+          <th id="2"  class="bg-primary"></th>
+          <th id="3"  class="bg-primary"></th>
+          <th id="4"  class="bg-primary"></th>
+          <th id="5"  class="bg-primary"></th>
         </thead>
         <tbody>
         </tbody>
