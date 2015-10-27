@@ -70,7 +70,7 @@
     
     function getColumnData(people_mappings, person, teamNumber){
       return '<td>' 
-             //+ '<img src = "' + people_mappings[person]['teams'][teamNumber]['logo'] + '" height = "50px"/>'
+             + '<img src = "logos/' + people_mappings[person]['teams'][teamNumber]['name'] + '.gif" height = "50px"/>'
              + people_mappings[person]['teams'][teamNumber]['name'] 
              + ' (' + people_mappings[person]['teams'][teamNumber]['points'] + ')'
              + '<span style="float:right">' + people_mappings[person]['teams'][teamNumber]['wins'] +'-' + people_mappings[person]['teams'][teamNumber]['losses'] + '-' + people_mappings[person]['teams'][teamNumber]['overtime'] 
