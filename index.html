@@ -8,6 +8,9 @@
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <style>
+      .favorite {background-color: rgba(13, 140, 214, 0.23)}
+    </style>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -43,8 +46,11 @@
                             , 'Duncan' : {'score' : 0, 'teams' : []}
       };
       $(data).each(function(){
-        var owner = TEAM_OWNERS[this.name];
-        people_mappings[owner]['score'] += parseInt(this.points);
+        var owner = TEAM_OWNERS[this.name][0];
+        var isFavorite = TEAM_OWNERS[this.name][1];
+        if (!isFavorite){
+          people_mappings[owner]['score'] += parseInt(this.points);
+        }
         people_mappings[owner]['teams'].push(this);
       });
       team_order = Object.keys(people_mappings).sort(function(a,b){return people_mappings[b]['score']-people_mappings[a]['score']})
@@ -69,9 +75,20 @@
     }
     
     function getColumnData(people_mappings, person, teamNumber){
-      return '<td>' 
+      var isFavorite = TEAM_OWNERS[people_mappings[person]['teams'][teamNumber]['name']][1]
+      //weird order of operations with bootstrap css -- just inline it
+      var inlineStyle = '';
+      if (isFavorite) inlineStyle = 'background-color: rgba(13, 140, 214, 0.23)';
+      return '<td style="' + inlineStyle + '">' 
              + '<img src = "logos/' + people_mappings[person]['teams'][teamNumber]['name'] + '.gif" height = "50px"/>'
+             + '<span>'
+             + '<div>'
              + people_mappings[person]['teams'][teamNumber]['name'] 
+             + '</div>'
+             + '<div>'
+             + TEAM_OWNERS[people_mappings[person]['teams'][teamNumber]['name']][2]
+             + '</div>'
+             + '</span>'
              + ' (' + people_mappings[person]['teams'][teamNumber]['points'] + ')'
              + '<span style="float:right">' + people_mappings[person]['teams'][teamNumber]['wins'] +'-' + people_mappings[person]['teams'][teamNumber]['losses'] + '-' + people_mappings[person]['teams'][teamNumber]['overtime'] 
            //  + ' (' + people_mappings[person]['teams'][teamNumber]['goalsDiff'] + ' Goals)'
