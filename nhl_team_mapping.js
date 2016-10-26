@@ -15,7 +15,7 @@ var TEAM_OWNERS = {
   ,'New Jersey'     :  [ 'Matt', false,'$1']
   ,'Carolina'       :  [ 'Alex', false,'$0']
   ,'Columbus'       :  [ 'Kevin', true,'Favorite']
-  ,'Dallas'         :  [ 'Matt', false,'$8']
+  ,'Dallas'         :  [ 'Matt', false,'$18']
   ,'Nashville'      :  [ 'Alex', false,'$16']
   ,'St. Louis'      :  [ 'Andy', false,'$18']
   ,'Winnipeg'       :  [ 'Kevin', false,'$1']
