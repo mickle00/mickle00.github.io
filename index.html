@@ -48,9 +48,7 @@
       $(data).each(function(){
         var owner = TEAM_OWNERS[this.name][0];
         var isFavorite = TEAM_OWNERS[this.name][1];
-        if (!isFavorite){
-          people_mappings[owner]['score'] += parseInt(this.points);
-        }
+        people_mappings[owner]['score'] += parseInt(this.points);
         people_mappings[owner]['teams'].push(this);
       });
       team_order = Object.keys(people_mappings).sort(function(a,b){return people_mappings[b]['score']-people_mappings[a]['score']})
@@ -64,7 +62,7 @@
         $('#results_table thead th#' + index).append(team_order[index] + ' (' + people_mappings[team_order[index]]['score'] + ')');
       });
         //loop thru 8 teams
-        for ( var i = 0; i < 5; i++ ) {
+        for ( var i = 0; i < 6; i++ ) {
             var html = '<tr id="row-' + i + '">';
             $('#results_table tbody').append(html);
             $.each(team_order, function(index, key){
@@ -75,25 +73,30 @@
     }
     
     function getColumnData(people_mappings, person, teamNumber){
-      var isFavorite = TEAM_OWNERS[people_mappings[person]['teams'][teamNumber]['name']][1]
-      //weird order of operations with bootstrap css -- just inline it
-      var inlineStyle = '';
-      if (isFavorite) inlineStyle = 'background-color: rgba(13, 140, 214, 0.23)';
-      return '<td style="' + inlineStyle + '">' 
-             + '<img src = "logos/' + people_mappings[person]['teams'][teamNumber]['name'] + '.gif" height = "50px"/>'
-             + '<span>'
-             + '<div>'
-             + people_mappings[person]['teams'][teamNumber]['name'] 
-             + '</div>'
-             + '<div>'
-             + TEAM_OWNERS[people_mappings[person]['teams'][teamNumber]['name']][2]
-             + '</div>'
-             + '</span>'
-             + ' (' + people_mappings[person]['teams'][teamNumber]['points'] + ')'
-             + '<span style="float:right">' + people_mappings[person]['teams'][teamNumber]['wins'] +'-' + people_mappings[person]['teams'][teamNumber]['losses'] + '-' + people_mappings[person]['teams'][teamNumber]['overtime'] 
-           //  + ' (' + people_mappings[person]['teams'][teamNumber]['goalsDiff'] + ' Goals)'
-             +'</span>'
-             +'</td>';
+      //hack since Kevin only has one team. RIP Kevin :(
+      try {
+        var isFavorite = TEAM_OWNERS[people_mappings[person]['teams'][teamNumber]['name']][1]
+        //weird order of operations with bootstrap css -- just inline it
+        var inlineStyle = '';
+        if (isFavorite) inlineStyle = 'background-color: rgba(13, 140, 214, 0.23)';
+        return '<td style="' + inlineStyle + '">' 
+               + '<img src = "logos/' + people_mappings[person]['teams'][teamNumber]['name'] + '.gif" height = "30px"/>'
+               + '<span>'
+               + '<div>'
+               + people_mappings[person]['teams'][teamNumber]['name'] 
+               + '</div>'
+               + '<div>'
+               + TEAM_OWNERS[people_mappings[person]['teams'][teamNumber]['name']][2]
+               + '</div>'
+               + '</span>'
+               + ' (' + people_mappings[person]['teams'][teamNumber]['points'] + ')'
+               + '<span style="float:right">' + people_mappings[person]['teams'][teamNumber]['wins'] +'-' + people_mappings[person]['teams'][teamNumber]['losses'] + '-' + people_mappings[person]['teams'][teamNumber]['overtime'] 
+             //  + ' (' + people_mappings[person]['teams'][teamNumber]['goalsDiff'] + ' Goals)'
+               +'</span>'
+               +'</td>';
+      } catch (e){
+        return '<td><span><div></div><div/></span><span/></td>';
+      }
     }
 
     </script>
