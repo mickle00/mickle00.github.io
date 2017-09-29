@@ -28,14 +28,11 @@
     var team_standings;
     var team_order;
     var parseData = function(d, t, j){
-        team_standings = d.query.results.standings['info-teams']['team-standing'];
-        team_standings.sort(function(a,b){
-          return b.points - a.points;
-        });
+        team_standings = d.overallteamstandings.teamstandingsentry;
         calculateScore(team_standings);
     }
 
-    $.getJSON("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20xml%20where%20url%20%3D%20'http%3A%2F%2Fwww.tsn.ca%2Fdatafiles%2FXML%2FNHL%2Fstandings.xml'&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys", null, parseData)
+    $.getJSON("https://4cg7l5owe2.execute-api.us-west-2.amazonaws.com/Prod/standings", null, parseData)
 
     function calculateScore(data){
       var people_mappings = {'Kevin' : {'score' : 0, 'teams' : []}
@@ -46,9 +43,9 @@
                             , 'Duncan' : {'score' : 0, 'teams' : []}
       };
       $(data).each(function(){
-        var owner = TEAM_OWNERS[this.name][0];
-        var isFavorite = TEAM_OWNERS[this.name][1];
-        people_mappings[owner]['score'] += parseInt(this.points);
+        var owner = TEAM_OWNERS[this.team.Abbreviation][0];
+        var isFavorite = TEAM_OWNERS[this.team.Abbreviation][1];
+        people_mappings[owner]['score'] += parseInt(this.stats.stats.Points['#text']);
         people_mappings[owner]['teams'].push(this);
       });
       team_order = Object.keys(people_mappings).sort(function(a,b){return people_mappings[b]['score']-people_mappings[a]['score']})
@@ -73,24 +70,29 @@
     }
     
     function getColumnData(people_mappings, person, teamNumber){
+      debugger;
       //hack since Kevin only has one team. RIP Kevin :(
       try {
-        var isFavorite = TEAM_OWNERS[people_mappings[person]['teams'][teamNumber]['name']][1]
+        var abbreviation = people_mappings[person]['teams'][teamNumber].team.Abbreviation;
+        var teamPoints = people_mappings[person]['teams'][teamNumber].stats.stats['Points']['#text']
+        var teamWins = people_mappings[person]['teams'][teamNumber].stats.stats['Wins']['#text']
+        var teamLosses = people_mappings[person]['teams'][teamNumber].stats.stats['Losses']['#text']
+        var isFavorite = TEAM_OWNERS[people_mappings[person]['teams'][teamNumber].team.Abbreviation][1]
         //weird order of operations with bootstrap css -- just inline it
         var inlineStyle = '';
         if (isFavorite) inlineStyle = 'background-color: rgba(13, 140, 214, 0.23)';
         return '<td style="' + inlineStyle + '">' 
-               + '<img src = "logos/' + people_mappings[person]['teams'][teamNumber]['name'] + '.gif" height = "30px"/>'
+               + '<img src = "logos/' + abbreviation + '.gif" height = "30px"/>'
                + '<span>'
                + '<div>'
-               + people_mappings[person]['teams'][teamNumber]['name'] 
+               + people_mappings[person]['teams'][teamNumber].team.Name
                + '</div>'
                + '<div>'
-               + TEAM_OWNERS[people_mappings[person]['teams'][teamNumber]['name']][2]
+               + TEAM_OWNERS[people_mappings[person]['teams'][teamNumber].team.Abbreviation][2]
                + '</div>'
                + '</span>'
-               + ' (' + people_mappings[person]['teams'][teamNumber]['points'] + ')'
-               + '<span style="float:right">' + people_mappings[person]['teams'][teamNumber]['wins'] +'-' + people_mappings[person]['teams'][teamNumber]['losses'] + '-' + people_mappings[person]['teams'][teamNumber]['overtime'] 
+               + ' (' + teamPoints + ')'
+               + '<span style="float:right">' + teamWins +'-' + teamLosses //+ '-' + people_mappings[person]['teams'][teamNumber]['overtime'] 
              //  + ' (' + people_mappings[person]['teams'][teamNumber]['goalsDiff'] + ' Goals)'
                +'</span>'
                +'</td>';
