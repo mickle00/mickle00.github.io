@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>As Long as Kevin Doesn't Win I'm Happy</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <style>
+      .favorite {background-color: rgba(13, 140, 214, 0.23)}
+    </style>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+<style>
+body {
+  min-height: 75rem; /* Can be removed; just added for demo purposes */
+}
+
+.navbar {
+  margin-bottom: 0;
+}
+
+.jumbotron {
+  padding-top: 6rem;
+  padding-bottom: 6rem;
+  margin-bottom: 0;
+  background-color: #fff;
+}
+
+.jumbotron p:last-child {
+  margin-bottom: 0;
+}
+
+.jumbotron-heading {
+  font-weight: 300;
+}
+
+.jumbotron .container {
+  max-width: 80%;
+}
+
+.album {
+  min-height: 50rem; /* Can be removed; just added for demo purposes */
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+  background-color: #f7f7f7;
+}
+
+.card {
+  float: left;
+  width: 33.333%;
+  padding: .75rem;
+  margin-bottom: 2rem;
+  border: 0;
+}
+
+.card > img {
+  margin-bottom: .75rem;
+}
+
+.card-text {
+  font-size: 85%;
+}
+
+footer {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+footer p {
+  margin-bottom: .25rem;
+}
+</style>
+<script>
+    function getUrlVars() {
+        var vars = [], hash;
+        var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+        for(var i = 0; i < hashes.length; i++)
+        {
+            hash = hashes[i].split('=');
+            vars.push(hash[0]);
+            vars[hash[0]] = hash[1];
+        }
+        return vars;
+    }
+    var teams = getUrlVars()['teams'];
+
+    function getTeamData(team){
+        return team.stats.stats.Wins["#text"]
+            + '-'
+            + team.stats.stats.Losses["#text"]
+            + '('
+            + team.stats.stats.Points["#text"]
+            + ')';
+    }
+    $.getJSON("https://4cg7l5owe2.execute-api.us-west-2.amazonaws.com/Prod/bets/team-vs-team?team=" + teams, null, function(d,t,j){
+        var teams = d.overallteamstandings.teamstandingsentry;
+        var winningTeam = teams[0];
+        var losingTeam = teams[1];
+        var logoURL = "http://aslongaskevindoesntwinimhappy.info/logos/";
+        $('#winning-data').html(getTeamData(winningTeam));
+        $('#losing-data').html(getTeamData(losingTeam));
+
+        $('#winning-logo').attr('src', logoURL + winningTeam.team.Abbreviation + '.gif');
+        $('#losing-logo').attr('src', logoURL + losingTeam.team.Abbreviation + '.gif');
+    });
+
+</script>
+  </head>
+  <body>
+<div class="bg-inverse collapse" id="navbarHeader" aria-expanded="false" style="">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-8 py-4">
+          </div>
+          <div class="col-sm-4 py-4">
+            <h4 class="text-white"></h4>
+            <ul class="list-unstyled">
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+<div class="navbar navbar-inverse bg-inverse">
+      <div class="container d-flex justify-content-between">
+      </div>
+    </div>
+<section class="jumbotron text-center">
+      <div class="container">
+        <h1 class="jumbotron-heading">Team Bet</h1>
+        <p class="lead text-muted"></p>
+      </div>
+    </section>
+  <div class="album text-muted">
+    <div class="container">
+      <div class="row">
+        <div class="card" id="winning">
+          <img id="winning-logo" data-src="holder.js/100px280/thumb" style="height: 280px; width: 100%; display: block;" src="" data-holder-rendered="true">
+          <p class="card-text"><span id="winning-data"></span></p>
+        </div>
+        <div class="card">
+          <img id="vs-logo" data-src="holder.js/100px280/thumb" style="height: 280px; width: 100%; display: block;" src="http://1340thefan.com/files/2011/08/Versus-Logo.jpg" data-holder-rendered="true">
+          <p class="card-text"></p>
+        </div>
+        <div class="card" id="losing">
+          <img id="losing-logo" data-src="holder.js/100px280/thumb" style="height: 280px; width: 100%; display: block;" src="" data-holder-rendered="true">
+          <p class="card-text"><span id="losing-data"></span></p>
+        </div>
+      </div>
+    </div>
+</div>
+  </body>
+</html>
