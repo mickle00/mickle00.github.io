@@ -35,38 +35,34 @@
     var team_standings;
     var team_order;
     var parseData = function(d, t, j){
-        team_standings = d.overallteamstandings.teamstandingsentry;
-        calculateScore(team_standings);
+        calculateScore(d);
     }
 
-    $.getJSON("https://4cg7l5owe2.execute-api.us-west-2.amazonaws.com/Prod/standings", null, parseData)
+    $.getJSON("http://worldcup.sfg.io/teams/results", null, parseData)
 
     function calculateScore(data){
-      var people_mappings = {'Kevin' : {'score' : 0, 'teams' : []}
-                            , 'Andy' : {'score' : 0, 'teams' : []}
+      var people_mappings = {'A Team' : {'score' : 0, 'teams' : []}
                             , 'Mike' : {'score' : 0, 'teams' : []}
                             , 'Matt' : {'score' : 0, 'teams' : []}
-                            , 'Alex' : {'score' : 0, 'teams' : []}
                             , 'Duncan' : {'score' : 0, 'teams' : []}
       };
       $(data).each(function(){
-        var owner = TEAM_OWNERS[this.team.Abbreviation][0];
-        var isFavorite = TEAM_OWNERS[this.team.Abbreviation][1];
-        people_mappings[owner]['score'] += parseInt(this.stats.stats.Points['#text']);
+        var team = this.fifa_code;
+        var owner = TEAM_OWNERS[team];
+        people_mappings[owner]['score'] += parseInt(this.points);
         people_mappings[owner]['teams'].push(this);
       });
       team_order = Object.keys(people_mappings).sort(function(a,b){return people_mappings[b]['score']-people_mappings[a]['score']})
-      console.log(people_mappings);
       printTable(people_mappings);
     }
 
     function printTable(people_mappings){  
       $.each(team_order, function(index, key){
-        console.log(key);
         $('#results_table thead th#' + index).append(team_order[index] + ' (' + people_mappings[team_order[index]]['score'] + ')');
       });
-        //loop thru 8 teams
-        for ( var i = 0; i < 6; i++ ) {
+        //loop thru 8 people
+        //TODO: can we not? fix this POS code
+        for ( var i = 0; i < 8; i++ ) {
             var html = '<tr id="row-' + i + '">';
             $('#results_table tbody').append(html);
             $.each(team_order, function(index, key){
@@ -79,27 +75,26 @@
     function getColumnData(people_mappings, person, teamNumber){
       //hack since Kevin only has one team. RIP Kevin :(
       try {
-        var abbreviation = people_mappings[person]['teams'][teamNumber].team.Abbreviation;
-        var teamPoints = people_mappings[person]['teams'][teamNumber].stats.stats['Points']['#text']
-        var teamWins = people_mappings[person]['teams'][teamNumber].stats.stats['Wins']['#text']
-        var teamLosses = people_mappings[person]['teams'][teamNumber].stats.stats['Losses']['#text']
-        var isFavorite = TEAM_OWNERS[people_mappings[person]['teams'][teamNumber].team.Abbreviation][1]
-        //weird order of operations with bootstrap css -- just inline it
+        var teamData = people_mappings[person]['teams'][teamNumber];
+        var abbreviation = teamData.fifa_code;
+        var teamPoints = teamData.points
+        var teamWins = teamData.wins
+        var teamLosses = teamData.losses
+        var teamDraws = teamData.draws
+        var group = teamData.group_letter;
         var inlineStyle = '';
-        if (isFavorite) inlineStyle = 'background-color: rgba(13, 140, 214, 0.23)';
         return '<td style="' + inlineStyle + '">' 
                + '<img src = "logos/' + abbreviation + '.gif" height = "30px"/>'
                + '<span>'
                + '<div>'
-               + people_mappings[person]['teams'][teamNumber].team.Name
+               + teamData.country + ' (' + group + ')'
                + '</div>'
                + '<div>'
-               + TEAM_OWNERS[people_mappings[person]['teams'][teamNumber].team.Abbreviation][2]
                + '</div>'
                + '</span>'
                + ' (' + teamPoints + ')'
-               + '<span style="float:right">' + teamWins +'-' + teamLosses //+ '-' + people_mappings[person]['teams'][teamNumber]['overtime'] 
-             //  + ' (' + people_mappings[person]['teams'][teamNumber]['goalsDiff'] + ' Goals)'
+               + '<span style="float:right">' + teamWins +'-' + teamLosses + '-' + teamDraws
+              // TOOD: Add goals data?
                +'</span>'
                +'</td>';
       } catch (e){
@@ -117,8 +112,6 @@
           <th id="1"  class="bg-primary"></th>
           <th id="2"  class="bg-primary"></th>
           <th id="3"  class="bg-primary"></th>
-          <th id="4"  class="bg-primary"></th>
-          <th id="5"  class="bg-primary"></th>
         </thead>
         <tbody>
         </tbody>
