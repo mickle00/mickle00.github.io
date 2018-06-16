@@ -59,6 +59,10 @@
     function printTable(people_mappings){  
       $.each(team_order, function(index, key){
         $('#results_table thead th#' + index).append(team_order[index] + ' (' + people_mappings[team_order[index]]['score'] + ')');
+
+        //sort teams by points
+        var personsTeam = people_mappings[team_order[index]]['teams']
+        personsTeam.sort(function(a,b) {return (a.points < b.points)});
       });
         //loop thru 8 people
         //TODO: can we not? fix this POS code
