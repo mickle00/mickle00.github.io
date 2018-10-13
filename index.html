@@ -42,17 +42,18 @@
     $.getJSON("https://4cg7l5owe2.execute-api.us-west-2.amazonaws.com/Prod/standings", null, parseData)
 
     function calculateScore(data){
-      var people_mappings = {'Kevin' : {'score' : 0, 'teams' : []}
-                            , 'Andy' : {'score' : 0, 'teams' : []}
-                            , 'Mike' : {'score' : 0, 'teams' : []}
-                            , 'Matt' : {'score' : 0, 'teams' : []}
-                            , 'Alex' : {'score' : 0, 'teams' : []}
-                            , 'Duncan' : {'score' : 0, 'teams' : []}
+      var people_mappings = {'Kevin'   :  {'score' : 0, 'gamesPlayed' : 0, 'teams' : []}
+                            , 'Andy'   :  {'score' : 0, 'gamesPlayed' : 0, 'teams' : []}
+                            , 'Mike'   :  {'score' : 0, 'gamesPlayed' : 0, 'teams' : []}
+                            , 'Matt'   :  {'score' : 0, 'gamesPlayed' : 0, 'teams' : []}
+                            , 'Alex'   :  {'score' : 0, 'gamesPlayed' : 0, 'teams' : []}
+                            , 'Duncan' :  {'score' : 0, 'gamesPlayed' : 0, 'teams' : []}
       };
       $(data).each(function(){
         var owner = TEAM_OWNERS[this.team.Abbreviation][0];
         var isFavorite = TEAM_OWNERS[this.team.Abbreviation][1];
         people_mappings[owner]['score'] += parseInt(this.stats.stats.Points['#text']);
+        people_mappings[owner]['gamesPlayed'] += parseInt(this.stats.GamesPlayed['#text']);
         people_mappings[owner]['teams'].push(this);
       });
       team_order = Object.keys(people_mappings).sort(function(a,b){return people_mappings[b]['score']-people_mappings[a]['score']})
@@ -63,7 +64,11 @@
     function printTable(people_mappings){  
       $.each(team_order, function(index, key){
         console.log(key);
-        $('#results_table thead th#' + index).append(team_order[index] + ' (' + people_mappings[team_order[index]]['score'] + ')');
+        // print header
+        let points = people_mappings[team_order[index]]['score'];
+        let gamesPlayed = people_mappings[team_order[index]]['gamesPlayed'];
+        let PPG = (points / gamesPlayed).toFixed(2);
+        $('#results_table thead th#' + index).append(team_order[index] + ' (' + points + 'pts, ' + gamesPlayed + 'gp, ' + PPG + ' ppg)');
       });
         //loop thru 8 teams
         for ( var i = 0; i < 6; i++ ) {
