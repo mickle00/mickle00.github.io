@@ -83,6 +83,7 @@
         var teamPoints = people_mappings[person]['teams'][teamNumber].stats.stats['Points']['#text']
         var teamWins = people_mappings[person]['teams'][teamNumber].stats.stats['Wins']['#text']
         var teamLosses = people_mappings[person]['teams'][teamNumber].stats.stats['Losses']['#text']
+        var teamOTLosses = people_mappings[person]['teams'][teamNumber].stats.stats['OvertimeLosses']['#text']
         var isFavorite = TEAM_OWNERS[people_mappings[person]['teams'][teamNumber].team.Abbreviation][1]
         //weird order of operations with bootstrap css -- just inline it
         var inlineStyle = '';
@@ -98,7 +99,7 @@
                + '</div>'
                + '</span>'
                + ' (' + teamPoints + ')'
-               + '<span style="float:right">' + teamWins +'-' + teamLosses //+ '-' + people_mappings[person]['teams'][teamNumber]['overtime'] 
+               + '<span style="float:right">' + teamWins  + '-' + teamLosses + '-' + teamOTLosses //+ '-' + people_mappings[person]['teams'][teamNumber]['overtime'] 
              //  + ' (' + people_mappings[person]['teams'][teamNumber]['goalsDiff'] + ' Goals)'
                +'</span>'
                +'</td>';
