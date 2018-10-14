@@ -103,8 +103,8 @@
           $('#row-' + index).append('<td>' + Object.keys(ownerMap)[index] + '\'s Teams</td>');
           Object.keys(ownerMap).forEach(function(owner){
             styleClass = '';
-            if (value[owner] > 0) styleClass = 'rgba(0, 255, 0, ' + value[owner]/100 + ')';
-            if (value[owner] < 0) styleClass = 'rgba(255, 0, 0, ' + Math.abs(value[owner])/100 + ')';
+            if (value[owner] > 0) styleClass = 'rgba(0, 255, 0, ' + value[owner]/10 + ')';
+            if (value[owner] < 0) styleClass = 'rgba(255, 0, 0, ' + Math.abs(value[owner])/10 + ')';
 
             $('#row-' + index).append('<td style= "background:' + styleClass + '">' + value[owner]+ '</td>');
           })
