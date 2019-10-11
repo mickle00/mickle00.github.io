@@ -25,7 +25,7 @@ var TEAM_OWNERS = {
   ,'SJS' :[ 'Andy' , true , 'Favorite']
   ,'VAN' :[ 'Alex' , false , '$2' ]
   ,'ARI' :[ 'Duncan', false , '$1']
-  ,'LAK' :[ 'Matt' , true , '$1']
+  ,'LAK' :[ 'Matt' , false , '$1']
   ,'EDM' :[ 'Andy', false , '$7']
   ,'ANA' :[ 'Alex' , false , '$3']
   ,'CGY' :[ 'Alex', false , '$14']
