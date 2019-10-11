@@ -14,7 +14,7 @@ var TEAM_OWNERS = {
   ,'PHI' :[ 'Duncan', false ,'$6' ]
   ,'NJD' :[ 'Duncan', false, '$4']
   ,'CAR' :[ 'Matt' , false ,' $14' ]
-  ,'CBJ' :[ 'Mike', true , '$6']
+  ,'CBJ' :[ 'Mike', false , '$6']
   ,'DAL' :[ 'Mike', false ,'$9' ]
   ,'NSH' :[ 'Andy' , false,  '$17']
   ,'STL' :[ 'Alex', false , '$14']
